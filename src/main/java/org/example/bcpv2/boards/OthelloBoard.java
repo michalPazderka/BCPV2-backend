@@ -11,6 +11,7 @@ import org.example.bcpv2.games.othello.rules.OthelloRules;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Getter
 @Setter
@@ -20,7 +21,6 @@ public class OthelloBoard extends AbsBoard {
 
     public OthelloBoard(OthelloRules othelloRules) {
         this.othelloRules = othelloRules;
-        System.out.println("xddd");
         this.board = new Square[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -58,8 +58,21 @@ public class OthelloBoard extends AbsBoard {
     }
 
     public boolean validMove(int r, int c, Color color) {
-        var tempBoard = new OthelloBoard(this, (OthelloRules) this.rules);
-        return !getFlipablePieces(r, c, color).isEmpty();
+        List<Square> squares = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                List<Square> possibleMoves = this.getFlipablePieces(i, j, color);
+                if (!possibleMoves.isEmpty()) {
+                    squares.add(new Square(i, j));
+                }
+            }
+        }
+        for(Square square: squares){
+            if(square.getRow() == r && square.getCol() == c){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addPiece(int x, int y, Color color) {
@@ -70,8 +83,6 @@ public class OthelloBoard extends AbsBoard {
 
     public List<Square> getFlipablePieces(int row, int col, Color color) {
         List<Square> flippablePieces = new ArrayList<>();
-
-        if (board[row][col].getPiece().isEmpty()) return flippablePieces;
 
         int[][] directions = {
                 {-1, -1}, {-1, 0}, {-1, 1},
@@ -98,7 +109,7 @@ public class OthelloBoard extends AbsBoard {
 
     public void flipPieces(List<Square> squares, Color color) {
         for (Square square : squares) {
-            board[square.getX()][square.getY()].getPiece().get().setColor(color);
+            board[square.getRow()][square.getCol()].getPiece().get().setColor(color);
         }
     }
 

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -77,8 +76,8 @@ public class ChessService {
             }
             List<Square> squareList = piece.getPossibleMoves(game.getBoard());
             for (Square square : squareList) {
-                if (square.getX() == Integer.parseInt(moves[2]) && square.getY() == Integer.parseInt(moves[3])) {
-                    game.getBoard().setPiecePostion(square.getX(), square.getY(), piece, game.getBoard());
+                if (square.getRow() == Integer.parseInt(moves[2]) && square.getCol() == Integer.parseInt(moves[3])) {
+                    game.getBoard().setPiecePostion(square.getRow(), square.getCol(), piece, game.getBoard());
                     game.changeColor();
                     game.getBoard().getChessRules().setIsPlaying((game.getBoard().getChessRules().getIsPlaying().equals(Color.WHITE)) ? Color.BLACK : Color.WHITE);
                     var chessGameDto = chessGameMapper.chessGameToChessGameDto(game);

@@ -19,17 +19,17 @@ public class Queen extends Piece<ChessBoard>{
         var moves = new ArrayList<Square>();
         int[][] possible = new int[][]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
         for(int[] possible1D: possible){
-            int x = getSquare().getX() + possible1D[0];
-            int y = getSquare().getY() + possible1D[1];
+            int x = getSquare().getRow() + possible1D[0];
+            int y = getSquare().getCol() + possible1D[1];
             while (board.isInBounds(x,y)){
                 if(board.isEmpty(x,y)){
-                    if(board.changePosition(x,y, getSquare().getX(), getSquare().getY())){
+                    if(board.changePosition(x,y, getSquare().getRow(), getSquare().getCol())){
                         moves.add(new Square(x,y));
                     }
                 } else if (board.isAllay(x,y,this.getColor())) {
                     break;
                 } else if (board.isEnemy(x,y,this.getColor())) {
-                    if(board.changePosition(x,y, getSquare().getX(), getSquare().getY())){
+                    if(board.changePosition(x,y, getSquare().getRow(), getSquare().getCol())){
                         moves.add(new Square(x,y));
                     }
                     break;
@@ -46,8 +46,8 @@ public class Queen extends Piece<ChessBoard>{
         var moves = new ArrayList<Square>();
         int[][] possible = new int[][]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
         for(int[] possible1D: possible){
-            int x = getSquare().getX() + possible1D[0];
-            int y = getSquare().getY() + possible1D[1];
+            int x = getSquare().getRow() + possible1D[0];
+            int y = getSquare().getCol() + possible1D[1];
             while (board.isInBounds(x,y)){
                 if(board.isEmpty(x,y)){
                         moves.add(new Square(x,y));

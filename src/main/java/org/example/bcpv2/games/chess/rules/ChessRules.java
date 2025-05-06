@@ -3,7 +3,6 @@ package org.example.bcpv2.games.chess.rules;
 import org.example.bcpv2.boards.ChessBoard;
 import org.example.bcpv2.boards.Square;
 import org.example.bcpv2.games.chess.eunums.Color;
-import org.example.bcpv2.games.chess.pieces.King;
 import org.example.bcpv2.games.chess.pieces.Piece;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class ChessRules {
         Square king = tempBoard.getKing(color);
         List<Square> theoreticalMoves = getEveryTheoreticalMove(tempBoard.changeColor(this.isPlaying), tempBoard);
         return theoreticalMoves.stream()
-                .anyMatch(square -> king.getX() == square.getX() && king.getY() == square.getY());
+                .anyMatch(square -> king.getRow() == square.getRow() && king.getCol() == square.getCol());
     }
 
     public List<Square> getEveryTheoreticalMove(Color color, ChessBoard tempBoard) {
@@ -48,8 +47,8 @@ public class ChessRules {
                         List<Square> theoreticalMoves = piece.get().getPossibleTheoreticalMove(tempBoard);
                         if (!theoreticalMoves.isEmpty()) {
                             for (Square theoreticalMove : theoreticalMoves) {
-                                if (moves.stream().noneMatch(square -> theoreticalMove.getX() == square.getX() && square.getY() == theoreticalMove.getY())) {
-                                    moves.add(new Square(theoreticalMove.getX(), theoreticalMove.getY()));
+                                if (moves.stream().noneMatch(square -> theoreticalMove.getRow() == square.getRow() && square.getCol() == theoreticalMove.getCol())) {
+                                    moves.add(new Square(theoreticalMove.getRow(), theoreticalMove.getCol()));
                                 }
                             }
                         }
@@ -71,8 +70,8 @@ public class ChessRules {
                         List<Square> theoreticalMoves = piece.get().getPossibleMoves(board);
                         if (!theoreticalMoves.isEmpty()) {
                             for (Square theoreticalMove : theoreticalMoves) {
-                                if (moves.stream().noneMatch(square -> theoreticalMove.getX() == square.getX() && square.getY() == theoreticalMove.getY())) {
-                                    moves.add(new Square(theoreticalMove.getX(), theoreticalMove.getY()));
+                                if (moves.stream().noneMatch(square -> theoreticalMove.getRow() == square.getRow() && square.getCol() == theoreticalMove.getCol())) {
+                                    moves.add(new Square(theoreticalMove.getRow(), theoreticalMove.getCol()));
                                 }
                             }
                         }
@@ -97,7 +96,7 @@ public class ChessRules {
     public boolean isCheck(ChessBoard board){
         Square king = board.getKing(this.isPlaying);
         List<Square> possibleMoves = this.getEveryMove(switchColors(this.isPlaying), board);
-        return possibleMoves.stream().anyMatch(square -> king.getX() == square.getX() && king.getY() == square.getY());
+        return possibleMoves.stream().anyMatch(square -> king.getRow() == square.getRow() && king.getCol() == square.getCol());
     }
 
     public Color switchColors(Color color){

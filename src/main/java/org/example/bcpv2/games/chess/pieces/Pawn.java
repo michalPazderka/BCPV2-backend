@@ -25,24 +25,24 @@ public class Pawn extends Piece<ChessBoard> {
     @Override
     public List<Square> getPossibleMoves(ChessBoard chessBoard) {
         var moves = new ArrayList<Square>();
-        int x = getSquare().getX();
-        int y = getSquare().getY();
+        int x = getSquare().getRow();
+        int y = getSquare().getCol();
         if (board.isInBounds(x + direction, y) && board.isEmpty(x + direction, y)
-                && board.changePosition(x + direction, y, this.getSquare().getX(), this.getSquare().getY())) {
+                && board.changePosition(x + direction, y, this.getSquare().getRow(), this.getSquare().getCol())) {
             moves.add(new Square(x + direction, y));
         }
         if (board.isInBounds(x + direction, y + 1) && board.isEnemy(x + direction, y + 1, getColor())
-                && board.changePosition(x + direction, y, this.getSquare().getX(), this.getSquare().getY())) {
+                && board.changePosition(x + direction, y, this.getSquare().getRow(), this.getSquare().getCol())) {
             moves.add(new Square(x + direction, y + 1));
         }
         if (board.isInBounds(x + direction, y - 1) && board.isEnemy(x + direction, y - 1, getColor())
-                && board.changePosition(x + direction, y, this.getSquare().getX(), this.getSquare().getY())) {
+                && board.changePosition(x + direction, y, this.getSquare().getRow(), this.getSquare().getCol())) {
             moves.add(new Square(x + direction, y - 1));
         }
         if (((this.getColor() == Color.WHITE && x == 1) || (this.getColor() == Color.BLACK && x == 6))
                 && board.isEmpty(x + direction, y)
                 && board.isEmpty(x + 2 * direction, y)
-                && board.changePosition(x + direction, y, this.getSquare().getX(), this.getSquare().getY())) {
+                && board.changePosition(x + direction, y, this.getSquare().getRow(), this.getSquare().getCol())) {
             moves.add(new Square(x + 2 * direction, y));
         }
         return moves;
@@ -51,8 +51,8 @@ public class Pawn extends Piece<ChessBoard> {
     @Override
     public List<Square> getPossibleTheoreticalMove(ChessBoard tempBoard) {
         var moves = new ArrayList<Square>();
-        int x = getSquare().getX();
-        int y = getSquare().getY();
+        int x = getSquare().getRow();
+        int y = getSquare().getCol();
         if (board.isInBounds(x + direction, y) && board.isEmpty(x + direction, y)) {
             moves.add(new Square(x + direction, y));
         }

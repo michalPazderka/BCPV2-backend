@@ -28,7 +28,7 @@ public class OthelloGame {
         this.white = new GameColor(Color.WHITE);
         this.black = new GameColor(Color.BLACK);
         this.gameId = gameId;
-        this.isPlaying = Color.WHITE;
+        this.isPlaying = Color.BLACK;
         this.moves = new ArrayList<>();
         this.board = new OthelloBoard(new OthelloRules(this.isPlaying));
     }

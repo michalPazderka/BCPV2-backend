@@ -108,7 +108,7 @@ public class ChessBoard extends AbsBoard {
         if (tempBoard.isEnemy(x, y, piece.getColor())) {
             tempBoard.destroyPiece(x, y);
         }
-        tempBoard.board[arr.getX()][arr.getY()].setPiece(null);
+        tempBoard.board[arr.getRow()][arr.getCol()].setPiece(null);
         tempBoard.board[x][y].setPiece(piece);
         piece.setSquare(new Square(x, y));
     }
@@ -129,7 +129,7 @@ public class ChessBoard extends AbsBoard {
         var piece = tempBoard.getPiece(e1, e2);
         if (enemyPiece.isPresent() && piece.isPresent()) {
             Square enemyPiecePosition = enemyPiece.get().getSquare();
-            tempBoard.setPiecePostion(enemyPiecePosition.getX(), enemyPiecePosition.getY(), piece.get(), tempBoard);
+            tempBoard.setPiecePostion(enemyPiecePosition.getRow(), enemyPiecePosition.getCol(), piece.get(), tempBoard);
             Square king = tempBoard.getKing(piece.get().getColor());
             return !chessRules.isTheoreticalCheck(king.getPiece().get().getColor(), tempBoard);
         } else if (piece.isPresent()) {
