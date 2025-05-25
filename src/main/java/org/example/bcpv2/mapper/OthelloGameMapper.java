@@ -35,6 +35,7 @@ public class OthelloGameMapper implements OthelloGameMapperS{
                 }
             }
         }
+        othelloGameDto.setGame("Othello");
         othelloGameDto.setRestOfColors(othelloGame.getAvailableColors());
         return othelloGameDto;
     }

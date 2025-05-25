@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -23,10 +24,10 @@ public class ChessService {
     private final WebSocketService webSocketService;
 
     public ChessGameDto createGame(String color) {
-        //String gameId = UUID.randomUUID().toString();
-        String gameId = "1";
+        String gameId = UUID.randomUUID().toString();
+        //String gameId = "1";
         ChessGame chessGame = new ChessGame(gameId);
-        switch (color){
+        switch (color) {
             case "WHITE":
                 chessGame.setColorWhite();
                 break;
@@ -41,10 +42,10 @@ public class ChessService {
         return chessGameMapper.chessGameToChessGameDto(chessGame);
     }
 
-    public ChessGameDto joinGame(String id, String color){
+    public ChessGameDto joinGame(String id, String color) {
         var game = activeGames.get(id);
         if (game == null) throw new IllegalArgumentException("Game does not exist");
-        switch (color){
+        switch (color) {
             case "WHITE":
                 game.setColorWhite();
                 break;
@@ -58,7 +59,10 @@ public class ChessService {
     }
 
     public ChessGameDto getGame(String gameId) {
-        return chessGameMapper.chessGameToChessGameDto(activeGames.get(gameId));
+        if(activeGames.get(gameId) != null){
+            return chessGameMapper.chessGameToChessGameDto(activeGames.get(gameId));
+        }
+        return null;
     }
 
     public ChessGameDto makeMove(String gameId, String move) {
@@ -71,7 +75,7 @@ public class ChessService {
             } else {
                 throw new IllegalArgumentException("Piece does not exist");
             }
-            if(game.getIsPlaying() != piece.getColor()){
+            if (game.getIsPlaying() != piece.getColor()) {
                 throw new IllegalArgumentException("Opponent is playing");
             }
             List<Square> squareList = piece.getPossibleMoves(game.getBoard());
@@ -81,12 +85,12 @@ public class ChessService {
                     game.changeColor();
                     game.getBoard().getChessRules().setIsPlaying((game.getBoard().getChessRules().getIsPlaying().equals(Color.WHITE)) ? Color.BLACK : Color.WHITE);
                     var chessGameDto = chessGameMapper.chessGameToChessGameDto(game);
-                    if(game.getBoard().getChessRules().isMate(game.getBoard())){
+                    if (game.getBoard().getChessRules().isMate(game.getBoard())) {
                         chessGameDto.setWinner(game.getIsPlaying().equals(Color.WHITE) ? Color.BLACK.toString() : Color.WHITE.toString());
-                    } else if(game.getBoard().getChessRules().isStaleMate(game.getBoard())){
+                    } else if (game.getBoard().getChessRules().isStaleMate(game.getBoard())) {
                         chessGameDto.setWinner("DRAW");
                     }
-                    webSocketService.notifyPlayers(game.getGameId(), chessGameDto);
+                    webSocketService.notifyChessPlayers(game.getGameId(), chessGameDto);
                     return chessGameDto;
                 }
             }
@@ -95,12 +99,13 @@ public class ChessService {
         throw new IllegalArgumentException("Game id does not exist");
     }
 
-    public ColorDto colorDto(String gameId){
+    public ColorDto colorDto(String gameId) {
         ChessGame game = activeGames.get(gameId);
-        if(game != null) {
+        if (game != null) {
             var colorList = game.getAvailableColors();
             return chessGameMapper.colorToColorDto(colorList);
         }
         throw new IllegalArgumentException("Game id does not exist");
     }
+
 }

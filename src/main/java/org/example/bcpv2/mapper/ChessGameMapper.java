@@ -31,6 +31,7 @@ public class ChessGameMapper implements ChessGameMapperS {
                 }
             }
         }
+        chessGameDto.setGame("Chess");
         chessGameDto.setRestOfColors(chessGame.getAvailableColors());
         return chessGameDto;
     }

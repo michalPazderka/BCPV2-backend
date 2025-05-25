@@ -57,7 +57,7 @@ public class OthelloBoard extends AbsBoard {
         return this.board[x][y].getPiece();
     }
 
-    public boolean validMove(int r, int c, Color color) {
+    public List<Square> getPossibleMoves(Color color) {
         List<Square> squares = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -67,8 +67,16 @@ public class OthelloBoard extends AbsBoard {
                 }
             }
         }
-        for(Square square: squares){
-            if(square.getRow() == r && square.getCol() == c){
+        /*squares.forEach(square -> {
+            System.out.println("souřadnice : " + square.getRow() + square.getCol());
+        });*/
+        return squares;
+    }
+
+    public boolean validMove(int r, int c, Color color) {
+        var possibleMoves = getPossibleMoves(color);
+        for(Square possibleMove: possibleMoves){
+            if(possibleMove.getRow() == r && possibleMove.getCol() == c){
                 return true;
             }
         }
@@ -78,11 +86,17 @@ public class OthelloBoard extends AbsBoard {
     public void addPiece(int x, int y, Color color) {
         this.board[x][y].setPiece(new Stone(color, Pieces.STONE, new Square(x, y), this));
         List<Square> squares = getFlipablePieces(x, y, color);
+        squares.forEach(square -> {
+            System.out.println("souřadnice : " + square.getRow() + square.getCol());
+        });
         flipPieces(squares, color);
     }
 
     public List<Square> getFlipablePieces(int row, int col, Color color) {
         List<Square> flippablePieces = new ArrayList<>();
+        if (!isEmpty(row, col)) {
+            return flippablePieces;
+        }
 
         int[][] directions = {
                 {-1, -1}, {-1, 0}, {-1, 1},
@@ -132,5 +146,17 @@ public class OthelloBoard extends AbsBoard {
 
     public boolean isEmpty(int x, int y) {
         return this.board[x][y].isEmpty();
+    }
+
+    public int numberOfStones(Color color){
+        int count = 0;
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(this.board[i][j].getPiece().isPresent() && this.board[i][j].getPiece().get().getColor() == color){
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }

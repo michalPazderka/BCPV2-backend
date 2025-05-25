@@ -3,13 +3,13 @@ package org.example.bcpv2.Service;
 import lombok.AllArgsConstructor;
 import org.example.bcpv2.dto.ColorDto;
 import org.example.bcpv2.dto.OthelloGameDto;
-import org.example.bcpv2.games.chess.pieces.Piece;
 import org.example.bcpv2.games.othello.OthelloGame;
 import org.example.bcpv2.mapper.OthelloGameMapperS;
 import org.example.bcpv2.webSocket.WebSocketService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -21,8 +21,8 @@ public class OthelloService {
 
 
     public OthelloGameDto createGame(String color) {
-        //String gameId = UUID.randomUUID().toString();
-        String gameId = "1";
+        String gameId = UUID.randomUUID().toString();
+        //String gameId = "1";
         OthelloGame othelloGame = new OthelloGame(gameId);
         switch (color) {
             case "WHITE":
@@ -56,7 +56,10 @@ public class OthelloService {
     }
 
     public OthelloGameDto getGame(String gameId) {
-        return othelloGameMapper.othelloGameToOthelloGameDto(activeGames.get(gameId));
+        if (activeGames.get(gameId) != null) {
+            return othelloGameMapper.othelloGameToOthelloGameDto(activeGames.get(gameId));
+        }
+        return null;
     }
 
     public OthelloGameDto makeMove(String gameId, String move) {
@@ -68,11 +71,20 @@ public class OthelloService {
             if (game.getBoard().isEmpty(r, c)) {
                 if (game.getBoard().validMove(r, c, game.getIsPlaying())) {
                     game.getBoard().addPiece(r, c, game.getIsPlaying());
-                    //todo: flip barvy testovat jestli je flip validní atd...
+                    if (!game.getBoard().getPossibleMoves(game.getIsPlaying()).isEmpty()) {
+                        game.changeColor();
+                        game.getBoard().getOthelloRules().setIsPlaying(game.getIsPlaying());
+                    }
+                    var othelloGameDto = othelloGameMapper.othelloGameToOthelloGameDto(game);
+                    if (game.getBoard().getOthelloRules().isGameOver(game.getBoard())) {
+                        var color = game.getBoard().getOthelloRules().getWinner(game.getBoard());
+                        othelloGameDto.setWinner(color.toString());
+                    }
+                    webSocketService.notifyOthelloPlayers(game.getGameId(), othelloGameDto);
+                    return othelloGameDto;
                 } else throw new IllegalArgumentException("Move is not valid");
             } else throw new IllegalArgumentException("Square is not empty");
-        }
-        throw new IllegalArgumentException("Game id does not exist");
+        } else throw new IllegalArgumentException("Game id does not exist");
     }
 
     public ColorDto colorDto(String gameId) {
