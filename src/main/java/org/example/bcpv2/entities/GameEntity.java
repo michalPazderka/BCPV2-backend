@@ -1,17 +1,16 @@
 package org.example.bcpv2.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+/**
+ * This class was previously a JPA entity but has been converted to a simple POJO
+ * since the application no longer uses a database.
+ */
 @Getter
 @Setter
 public class GameEntity {
 
-    @Id
     Long id;
-
 
 }

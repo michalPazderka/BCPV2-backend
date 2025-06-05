@@ -1,9 +1,7 @@
 package org.example.bcpv2.mapper;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.bcpv2.dto.ChessGameDto;
 import org.example.bcpv2.dto.ColorDto;
 import org.example.bcpv2.dto.OthelloGameDto;
 import org.example.bcpv2.games.chess.eunums.Color;
@@ -15,12 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 
-
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class OthelloGameMapper implements OthelloGameMapperS{
+public class OthelloGameMapper implements OthelloGameMapperS {
 
     @Override
     public OthelloGameDto othelloGameToOthelloGameDto(OthelloGame othelloGame) {
@@ -30,8 +26,8 @@ public class OthelloGameMapper implements OthelloGameMapperS{
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Optional<Piece> pieceOpt = othelloGame.getBoard().getBoard()[i][j].getPiece();
-                if(pieceOpt.isPresent()){
-                    othelloGameDto.setBoardValue(i,j, pieceOpt.get());
+                if (pieceOpt.isPresent()) {
+                    othelloGameDto.setBoardValue(i, j, pieceOpt.get());
                 }
             }
         }
@@ -40,7 +36,7 @@ public class OthelloGameMapper implements OthelloGameMapperS{
         return othelloGameDto;
     }
 
-    public ColorDto colorToColorDto(List<Color> color){
+    public ColorDto colorToColorDto(List<Color> color) {
         var colorDto = new ColorDto();
         colorDto.setColor(color);
         return colorDto;
