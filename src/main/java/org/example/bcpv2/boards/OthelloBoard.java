@@ -67,9 +67,6 @@ public class OthelloBoard extends AbsBoard {
                 }
             }
         }
-        /*squares.forEach(square -> {
-            System.out.println("souřadnice : " + square.getRow() + square.getCol());
-        });*/
         return squares;
     }
 
@@ -84,12 +81,9 @@ public class OthelloBoard extends AbsBoard {
     }
 
     public void addPiece(int x, int y, Color color) {
-        this.board[x][y].setPiece(new Stone(color, Pieces.STONE, new Square(x, y), this));
         List<Square> squares = getFlipablePieces(x, y, color);
-        squares.forEach(square -> {
-            System.out.println("souřadnice : " + square.getRow() + square.getCol());
-        });
         flipPieces(squares, color);
+        this.board[x][y].setPiece(new Stone(color, Pieces.STONE, new Square(x, y), this));
     }
 
     public List<Square> getFlipablePieces(int row, int col, Color color) {

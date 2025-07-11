@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.bcpv2.Service.ChessService;
 import org.example.bcpv2.dto.ChessGameDto;
 import org.example.bcpv2.dto.ColorDto;
-import org.example.bcpv2.games.chess.ChessGame;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -15,8 +17,13 @@ public class ChessController {
 
     private final ChessService chessService;
 
+    /*@GetMapping()
+    public ResponseEntity<Page<ChessGameDto>> getChessGames(Pageable pageable) {
+        chessService.getAllGames(pageable);
+    }*/
+
     @PostMapping("/new")
-    public ChessGameDto createGame(@RequestBody String color){
+    public ChessGameDto createGame(@RequestBody String color) {
         return chessService.createGame(color);
     }
 
@@ -28,13 +35,14 @@ public class ChessController {
         }
         return ResponseEntity.ok(game);
     }
+
     @PostMapping("/join/{gameId}")
-    public ChessGameDto joinGame(@PathVariable String gameId, @RequestBody String color){
-         return chessService.joinGame(gameId, color);
+    public ChessGameDto joinGame(@PathVariable String gameId, @RequestBody String color) {
+        return chessService.joinGame(gameId, color);
     }
 
     @GetMapping("/{gameId}/restOfColors")
-    public ResponseEntity<ColorDto> getRestOfColors(@PathVariable String gameId){
+    public ResponseEntity<ColorDto> getRestOfColors(@PathVariable String gameId) {
         return ResponseEntity.ok(chessService.colorDto(gameId));
 
     }

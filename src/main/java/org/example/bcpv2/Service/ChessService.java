@@ -9,6 +9,9 @@ import org.example.bcpv2.games.chess.eunums.Color;
 import org.example.bcpv2.games.chess.pieces.Piece;
 import org.example.bcpv2.mapper.ChessGameMapperS;
 import org.example.bcpv2.webSocket.WebSocketService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,10 @@ public class ChessService {
     private final Map<String, ChessGame> activeGames = new ConcurrentHashMap<>();
     private final ChessGameMapperS chessGameMapper;
     private final WebSocketService webSocketService;
+
+    public List<ChessGameDto> getGames() {
+        return activeGames.values().stream().map(chessGameMapper::chessGameToChessGameDto).toList();
+    }
 
     public ChessGameDto createGame(String color) {
         String gameId = UUID.randomUUID().toString();

@@ -1,6 +1,7 @@
 package org.example.bcpv2.Service;
 
 import lombok.AllArgsConstructor;
+import org.example.bcpv2.dto.ChessGameDto;
 import org.example.bcpv2.dto.ColorDto;
 import org.example.bcpv2.dto.OthelloGameDto;
 import org.example.bcpv2.games.othello.OthelloGame;
@@ -8,6 +9,7 @@ import org.example.bcpv2.mapper.OthelloGameMapperS;
 import org.example.bcpv2.webSocket.WebSocketService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +21,9 @@ public class OthelloService {
     private final WebSocketService webSocketService;
     private final OthelloGameMapperS othelloGameMapper;
 
+    public List<OthelloGameDto> getGames() {
+        return activeGames.values().stream().map(othelloGameMapper::othelloGameToOthelloGameDto).toList();
+    }
 
     public OthelloGameDto createGame(String color) {
         String gameId = UUID.randomUUID().toString();
@@ -71,7 +76,9 @@ public class OthelloService {
             if (game.getBoard().isEmpty(r, c)) {
                 if (game.getBoard().validMove(r, c, game.getIsPlaying())) {
                     game.getBoard().addPiece(r, c, game.getIsPlaying());
-                    if (!game.getBoard().getPossibleMoves(game.getIsPlaying()).isEmpty()) {
+                    game.changeColor();
+                    game.getBoard().getOthelloRules().setIsPlaying(game.getIsPlaying());
+                    if (game.getBoard().getPossibleMoves(game.getIsPlaying()).isEmpty()) {
                         game.changeColor();
                         game.getBoard().getOthelloRules().setIsPlaying(game.getIsPlaying());
                     }
