@@ -30,7 +30,7 @@ public class GeneralController {
 
     @GetMapping("/{gameId}")
     public ResponseEntity<AbsGameDto> getGame(@PathVariable String gameId) {
-        var game = generalService.getGame(gameId);
+        var game = generalService.getGameDto(gameId);
         if (game == null) {
             return ResponseEntity.notFound().build();
         }

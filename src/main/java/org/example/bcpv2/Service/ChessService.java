@@ -9,9 +9,6 @@ import org.example.bcpv2.games.chess.eunums.Color;
 import org.example.bcpv2.games.chess.pieces.Piece;
 import org.example.bcpv2.mapper.ChessGameMapperS;
 import org.example.bcpv2.webSocket.WebSocketService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @AllArgsConstructor
-public class ChessService {
+public class ChessService implements GameService<ChessGame, ChessGameDto>{
     private final Map<String, ChessGame> activeGames = new ConcurrentHashMap<>();
     private final ChessGameMapperS chessGameMapper;
     private final WebSocketService webSocketService;
@@ -32,7 +29,6 @@ public class ChessService {
 
     public ChessGameDto createGame(String color) {
         String gameId = UUID.randomUUID().toString();
-        //String gameId = "1";
         ChessGame chessGame = new ChessGame(gameId);
         switch (color) {
             case "WHITE":
@@ -65,11 +61,15 @@ public class ChessService {
         return chessGameMapper.chessGameToChessGameDto(game);
     }
 
-    public ChessGameDto getGame(String gameId) {
-        if(activeGames.get(gameId) != null){
+    public ChessGameDto getGameDto(String gameId) {
+        if (activeGames.get(gameId) != null) {
             return chessGameMapper.chessGameToChessGameDto(activeGames.get(gameId));
         }
         return null;
+    }
+
+    public ChessGame getGame(String gameId){
+        return activeGames.get(gameId);
     }
 
     public ChessGameDto makeMove(String gameId, String move) {
@@ -94,8 +94,10 @@ public class ChessService {
                     var chessGameDto = chessGameMapper.chessGameToChessGameDto(game);
                     if (game.getBoard().getChessRules().isMate(game.getBoard())) {
                         chessGameDto.setWinner(game.getIsPlaying().equals(Color.WHITE) ? Color.BLACK.toString() : Color.WHITE.toString());
+                        killGame(gameId);
                     } else if (game.getBoard().getChessRules().isStaleMate(game.getBoard())) {
                         chessGameDto.setWinner("DRAW");
+                        killGame(gameId);
                     }
                     webSocketService.notifyChessPlayers(game.getGameId(), chessGameDto);
                     return chessGameDto;
@@ -113,6 +115,10 @@ public class ChessService {
             return chessGameMapper.colorToColorDto(colorList);
         }
         throw new IllegalArgumentException("Game id does not exist");
+    }
+
+    public void killGame(String gameId){
+        activeGames.remove(gameId);
     }
 
 }

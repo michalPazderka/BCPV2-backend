@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.bcpv2.Service.ChessService;
 import org.example.bcpv2.dto.ChessGameDto;
 import org.example.bcpv2.dto.ColorDto;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
 
 
 @RestController
@@ -17,11 +15,6 @@ public class ChessController {
 
     private final ChessService chessService;
 
-    /*@GetMapping()
-    public ResponseEntity<Page<ChessGameDto>> getChessGames(Pageable pageable) {
-        chessService.getAllGames(pageable);
-    }*/
-
     @PostMapping("/new")
     public ChessGameDto createGame(@RequestBody String color) {
         return chessService.createGame(color);
@@ -29,7 +22,7 @@ public class ChessController {
 
     @GetMapping("/{gameId}")
     public ResponseEntity<ChessGameDto> getGame(@PathVariable String gameId) {
-        ChessGameDto game = chessService.getGame(gameId);
+        ChessGameDto game = chessService.getGameDto(gameId);
         if (game == null) {
             return ResponseEntity.notFound().build();
         }

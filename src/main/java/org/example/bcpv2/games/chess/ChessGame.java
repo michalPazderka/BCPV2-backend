@@ -2,10 +2,12 @@ package org.example.bcpv2.games.chess;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.bcpv2.GameColors.GameColor;
 import org.example.bcpv2.boards.ChessBoard;
+import org.example.bcpv2.games.abstractGame.AbsGame;
 import org.example.bcpv2.games.chess.eunums.Color;
 import org.example.bcpv2.games.chess.rules.ChessRules;
 
@@ -14,15 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Data
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
-public class ChessGame {
-    private String gameId;
-    private GameColor white;
-    private GameColor black;
-    private Color isPlaying;
-    private List<String> moves;
+public class ChessGame extends AbsGame {
     private ChessBoard board;
 
     public ChessGame(String gameId) {
@@ -32,24 +29,5 @@ public class ChessGame {
         this.isPlaying = Color.WHITE;
         this.moves = new ArrayList<>();
         this.board = new ChessBoard(new ChessRules(this.isPlaying));
-    }
-
-    public void changeColor() {
-        this.isPlaying = (this.isPlaying.equals(Color.WHITE)) ? Color.BLACK : Color.WHITE;
-    }
-
-    public List<Color> getAvailableColors(){
-        List<Color> colors = new ArrayList<>();
-        if (!white.isTaken()) colors.add(Color.WHITE);
-        if (!black.isTaken()) colors.add(Color.BLACK);
-        return colors;
-    }
-
-    public void setColorWhite(){
-        this.white.setTaken(true);
-    }
-
-    public void setColorBlack() {
-        this.black.setTaken(true);
     }
 }

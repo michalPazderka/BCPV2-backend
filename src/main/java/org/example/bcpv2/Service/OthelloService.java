@@ -1,7 +1,6 @@
 package org.example.bcpv2.Service;
 
 import lombok.AllArgsConstructor;
-import org.example.bcpv2.dto.ChessGameDto;
 import org.example.bcpv2.dto.ColorDto;
 import org.example.bcpv2.dto.OthelloGameDto;
 import org.example.bcpv2.games.othello.OthelloGame;
@@ -16,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @AllArgsConstructor
-public class OthelloService {
+public class OthelloService implements GameService<OthelloGame, OthelloGameDto>{
     private final Map<String, OthelloGame> activeGames = new ConcurrentHashMap<>();
     private final WebSocketService webSocketService;
     private final OthelloGameMapperS othelloGameMapper;
@@ -60,11 +59,15 @@ public class OthelloService {
         return othelloGameMapper.othelloGameToOthelloGameDto(game);
     }
 
-    public OthelloGameDto getGame(String gameId) {
+    public OthelloGameDto getGameDto(String gameId) {
         if (activeGames.get(gameId) != null) {
             return othelloGameMapper.othelloGameToOthelloGameDto(activeGames.get(gameId));
         }
         return null;
+    }
+
+    public OthelloGame getGame(String gameId){
+        return activeGames.get(gameId);
     }
 
     public OthelloGameDto makeMove(String gameId, String move) {
@@ -86,6 +89,7 @@ public class OthelloService {
                     if (game.getBoard().getOthelloRules().isGameOver(game.getBoard())) {
                         var color = game.getBoard().getOthelloRules().getWinner(game.getBoard());
                         othelloGameDto.setWinner(color.toString());
+                        killGame(gameId);
                     }
                     webSocketService.notifyOthelloPlayers(game.getGameId(), othelloGameDto);
                     return othelloGameDto;
@@ -101,6 +105,10 @@ public class OthelloService {
             return othelloGameMapper.colorToColorDto(colorList);
         }
         throw new IllegalArgumentException("Game id does not exist");
+    }
+
+    public void killGame(String gameId){
+        activeGames.remove(gameId);
     }
 
 }

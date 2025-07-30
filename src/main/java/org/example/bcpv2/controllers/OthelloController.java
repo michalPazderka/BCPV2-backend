@@ -3,7 +3,6 @@ package org.example.bcpv2.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.bcpv2.Service.OthelloService;
-import org.example.bcpv2.dto.ChessGameDto;
 import org.example.bcpv2.dto.ColorDto;
 import org.example.bcpv2.dto.OthelloGameDto;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ public class OthelloController {
 
     @GetMapping("/{gameId}")
     public ResponseEntity<OthelloGameDto> getGame(@PathVariable String gameId) {
-        OthelloGameDto game = othelloService.getGame(gameId);
+        OthelloGameDto game = othelloService.getGameDto(gameId);
         if (game == null) {
             return ResponseEntity.notFound().build();
         }
