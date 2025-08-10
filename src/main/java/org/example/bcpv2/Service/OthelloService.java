@@ -3,6 +3,7 @@ package org.example.bcpv2.Service;
 import lombok.AllArgsConstructor;
 import org.example.bcpv2.dto.ColorDto;
 import org.example.bcpv2.dto.OthelloGameDto;
+import org.example.bcpv2.games.chess.eunums.Color;
 import org.example.bcpv2.games.othello.OthelloGame;
 import org.example.bcpv2.mapper.OthelloGameMapperS;
 import org.example.bcpv2.webSocket.WebSocketService;
@@ -22,6 +23,10 @@ public class OthelloService implements GameService<OthelloGame, OthelloGameDto>{
 
     public List<OthelloGameDto> getGames() {
         return activeGames.values().stream().map(othelloGameMapper::othelloGameToOthelloGameDto).toList();
+    }
+
+    public ColorDto getColors(){
+        return othelloGameMapper.colorToColorDto(List.of(Color.WHITE, Color.BLACK));
     }
 
     public OthelloGameDto createGame(String color) {

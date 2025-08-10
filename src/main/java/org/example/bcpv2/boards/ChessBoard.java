@@ -2,11 +2,13 @@ package org.example.bcpv2.boards;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.bcpv2.games.chess.Move;
 import org.example.bcpv2.games.chess.eunums.Color;
 import org.example.bcpv2.games.chess.eunums.Pieces;
 import org.example.bcpv2.games.chess.pieces.*;
 import org.example.bcpv2.games.chess.rules.ChessRules;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -15,9 +17,11 @@ import java.util.Optional;
 public class ChessBoard extends AbsBoard {
     Square[][] board;
     ChessRules chessRules;
+    List<Move> moveHistory;
 
-    public ChessBoard(ChessRules chessRules) {
+    public ChessBoard(ChessRules chessRules, List<Move> moveHistory) {
         this.chessRules = chessRules;
+        this.moveHistory = moveHistory;
         this.board = new Square[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -31,7 +35,7 @@ public class ChessBoard extends AbsBoard {
         this.board = new Square[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                this.board[i][j] = new Square(i,j);
+                this.board[i][j] = new Square(i, j);
                 if (other.board[i][j].getPiece().isPresent()) {
                     this.board[i][j].setPiece(other.board[i][j].getPiece().get().clone());
                 }
@@ -39,31 +43,31 @@ public class ChessBoard extends AbsBoard {
         }
     }
 
-    public void initialize(){
-        for(int i = 0; i < 8; i++){
-            this.board[1][i].setPiece(new Pawn(Color.WHITE, Pieces.PAWN, new Square(1,i), this));
-            this.board[6][i].setPiece(new Pawn(Color.BLACK, Pieces.PAWN, new Square(6,i), this));
+    public void initialize() {
+        for (int i = 0; i < 8; i++) {
+            this.board[1][i].setPiece(new Pawn(Color.WHITE, Pieces.PAWN, new Square(1, i), this));
+            this.board[6][i].setPiece(new Pawn(Color.BLACK, Pieces.PAWN, new Square(6, i), this));
         }
-        this.board[0][0].setPiece(new Rook(Color.WHITE, Pieces.ROOK, new Square(0,0), this));
-        this.board[0][7].setPiece(new Rook(Color.WHITE, Pieces.ROOK, new Square(0,7), this));
-        this.board[7][0].setPiece(new Rook(Color.BLACK, Pieces.ROOK, new Square(7,0), this));
-        this.board[7][7].setPiece(new Rook(Color.BLACK, Pieces.ROOK, new Square(7,7), this));
+        this.board[0][0].setPiece(new Rook(Color.WHITE, Pieces.ROOK, new Square(0, 0), this));
+        this.board[0][7].setPiece(new Rook(Color.WHITE, Pieces.ROOK, new Square(0, 7), this));
+        this.board[7][0].setPiece(new Rook(Color.BLACK, Pieces.ROOK, new Square(7, 0), this));
+        this.board[7][7].setPiece(new Rook(Color.BLACK, Pieces.ROOK, new Square(7, 7), this));
 
-        this.board[0][1].setPiece(new Knight(Color.WHITE, Pieces.KNIGHT, new Square(0,1), this));
-        this.board[0][6].setPiece(new Knight(Color.WHITE, Pieces.KNIGHT, new Square(0,6), this));
-        this.board[7][1].setPiece(new Knight(Color.BLACK, Pieces.KNIGHT, new Square(7,1), this));
-        this.board[7][6].setPiece(new Knight(Color.BLACK, Pieces.KNIGHT, new Square(7,6), this));
+        this.board[0][1].setPiece(new Knight(Color.WHITE, Pieces.KNIGHT, new Square(0, 1), this));
+        this.board[0][6].setPiece(new Knight(Color.WHITE, Pieces.KNIGHT, new Square(0, 6), this));
+        this.board[7][1].setPiece(new Knight(Color.BLACK, Pieces.KNIGHT, new Square(7, 1), this));
+        this.board[7][6].setPiece(new Knight(Color.BLACK, Pieces.KNIGHT, new Square(7, 6), this));
 
-        this.board[0][2].setPiece(new Bishop(Color.WHITE, Pieces.BISHOP, new Square(0,2), this));
-        this.board[0][5].setPiece(new Bishop(Color.WHITE, Pieces.BISHOP, new Square(0,5), this));
-        this.board[7][2].setPiece(new Bishop(Color.BLACK, Pieces.BISHOP, new Square(7,2), this));
-        this.board[7][5].setPiece(new Bishop(Color.BLACK, Pieces.BISHOP, new Square(7,5), this));
+        this.board[0][2].setPiece(new Bishop(Color.WHITE, Pieces.BISHOP, new Square(0, 2), this));
+        this.board[0][5].setPiece(new Bishop(Color.WHITE, Pieces.BISHOP, new Square(0, 5), this));
+        this.board[7][2].setPiece(new Bishop(Color.BLACK, Pieces.BISHOP, new Square(7, 2), this));
+        this.board[7][5].setPiece(new Bishop(Color.BLACK, Pieces.BISHOP, new Square(7, 5), this));
 
-        this.board[0][3].setPiece(new Queen(Color.WHITE, Pieces.QUEEN, new Square(0,3), this));
-        this.board[7][3].setPiece(new Queen(Color.BLACK, Pieces.QUEEN, new Square(7,3), this));
+        this.board[0][3].setPiece(new Queen(Color.WHITE, Pieces.QUEEN, new Square(0, 3), this));
+        this.board[7][3].setPiece(new Queen(Color.BLACK, Pieces.QUEEN, new Square(7, 3), this));
 
-        this.board[0][4].setPiece(new King(Color.WHITE, Pieces.KING, new Square(0,4), this));
-        this.board[7][4].setPiece(new King(Color.BLACK, Pieces.KING, new Square(7,4), this));
+        this.board[0][4].setPiece(new King(Color.WHITE, Pieces.KING, new Square(0, 4), this));
+        this.board[7][4].setPiece(new King(Color.BLACK, Pieces.KING, new Square(7, 4), this));
     }
 
     //TODO: zatím nechám na X,Y do budoucna pro lehčí práci bude možný posílat Square
@@ -87,7 +91,7 @@ public class ChessBoard extends AbsBoard {
         return this.board[x][y].isEmpty();
     }
 
-    public Square getKing(Color color) {
+    public Square getKingSquare(Color color) {
         for (Square[] row : this.board) {
             for (Square square : row) {
                 Piece<ChessBoard> piece = square.getPiece().orElse(null);
@@ -97,6 +101,35 @@ public class ChessBoard extends AbsBoard {
             }
         }
         return null;
+    }
+
+    public King getKing(Color color) {
+        var piece = getKingSquare(color).getPiece();
+        if(piece.isPresent() && piece.get() instanceof King){
+            return (King) piece.get();
+        }
+        return null;
+    }
+
+
+    public void checkIfMovePromote(int x, int y, Piece<ChessBoard> piece) {
+        if (!(piece instanceof Pawn)) return;
+        if (x == 0 || x == 7) this.promote(x, y);
+
+    }
+
+    public void promote(int x, int y) {
+        var piece = this.board[x][y].getPiece();
+        if (piece.isPresent()) {
+            if (piece.get() instanceof Pawn) {
+                this.destroyPiece(x, y);
+                if (piece.get().getColor() == Color.WHITE) {
+                    this.board[x][y].setPiece(new Queen(piece.get().getColor(), Pieces.QUEEN, piece.get().getSquare(), this));
+                } else {
+                    this.board[x][y].setPiece(new Queen(piece.get().getColor(), Pieces.QUEEN, piece.get().getSquare(), this));
+                }
+            }
+        }
     }
 
     public Optional<Piece> getPiece(int x, int y) {
@@ -130,13 +163,75 @@ public class ChessBoard extends AbsBoard {
         if (enemyPiece.isPresent() && piece.isPresent()) {
             Square enemyPiecePosition = enemyPiece.get().getSquare();
             tempBoard.setPiecePostion(enemyPiecePosition.getRow(), enemyPiecePosition.getCol(), piece.get(), tempBoard);
-            Square king = tempBoard.getKing(piece.get().getColor());
+            Square king = tempBoard.getKingSquare(piece.get().getColor());
             return !chessRules.isTheoreticalCheck(king.getPiece().get().getColor(), tempBoard);
         } else if (piece.isPresent()) {
             tempBoard.setPiecePostion(ep1, ep2, piece.get(), tempBoard);
-            Square king = tempBoard.getKing(piece.get().getColor());
+            Square king = tempBoard.getKingSquare(piece.get().getColor());
             return !chessRules.isTheoreticalCheck(king.piece.get().getColor(), tempBoard);
         }
         return true;
+    }
+
+    public boolean castleEightSide(Color color, List<Move> moveHistory) {
+        if (moveHistory.isEmpty()) return false;
+        int rookPosition = color == Color.WHITE ? 1 : 8;
+        for (var move : moveHistory) {
+            String[] from = move.getFrom().split("");
+            if (color == move.getPiece().getColor() && Pieces.KING == move.getPiece().getPieceType()) {
+                return false;
+            }
+            if (String.valueOf(rookPosition).equals(from[0]) && from[1].equals("7")) {
+                return false;
+            }
+        }
+
+        var isSquareUnderAttack5 = chessRules.isSquareUnderAttack(new Square(rookPosition - 1, 5), this, this.changeColor(color));
+
+        var isSquareUnderAttack6 = chessRules.isSquareUnderAttack(new Square(rookPosition - 1, 6), this, this.changeColor(color));
+
+        if (isSquareUnderAttack5 || isSquareUnderAttack6) {
+            return false;
+        }
+        var isSquareEmpty5 = this.isEmpty(rookPosition - 1, 5);
+        var isSquareEmpty6 = this.isEmpty(rookPosition - 1, 6);
+        return isSquareEmpty5 && isSquareEmpty6;
+
+    }
+
+    public boolean castleOneSide(Color color, List<Move> moveHistory) {
+        if (moveHistory.isEmpty()) return false;
+        int rookPosition = color == Color.WHITE ? 1 : 8;
+        for (var move : moveHistory) {
+            String[] from = move.getFrom().split("");
+            if (color == move.getPiece().getColor() && Pieces.KING == move.getPiece().getPieceType()) {
+                return false;
+            }
+            if (String.valueOf(rookPosition).equals(from[0]) && from[1].equals("0")) {
+                return false;
+            }
+        }
+        var isSquareUnderAttack3 = chessRules.isSquareUnderAttack(new Square(rookPosition - 1, 3), this, this.changeColor(color));
+        var isSquareUnderAttack2 = chessRules.isSquareUnderAttack(new Square(rookPosition - 1, 2), this, this.changeColor(color));
+
+        if (isSquareUnderAttack3 || isSquareUnderAttack2) {
+            return false;
+        }
+        var isSquareEmpty3 = this.isEmpty(rookPosition - 1, 3);
+        var isSquareEmpty2 = this.isEmpty(rookPosition - 1, 2);
+        return isSquareEmpty3 && isSquareEmpty2;
+    }
+
+    public void castleMove(King king, int rookPosition) {
+        var direction = king.getColor() == Color.WHITE ? 0 : 7;
+        var rookOptional = this.getPiece(direction, rookPosition);
+        Piece rook;
+        if (rookOptional.isEmpty()) {
+            return;
+        } else {
+            rook = rookOptional.get();
+        }
+        this.setPiecePostion(direction, rookPosition == 0 ? 2 : 6, king, this);
+        this.setPiecePostion(direction, rookPosition == 0 ? 3 : 5, rook, this);
     }
 }

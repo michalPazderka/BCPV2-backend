@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.bcpv2.GameColors.GameColor;
 import org.example.bcpv2.boards.ChessBoard;
+import org.example.bcpv2.boards.Square;
 import org.example.bcpv2.games.abstractGame.AbsGame;
 import org.example.bcpv2.games.chess.eunums.Color;
+import org.example.bcpv2.games.chess.pieces.Piece;
 import org.example.bcpv2.games.chess.rules.ChessRules;
 
 import java.util.ArrayList;
@@ -28,6 +30,6 @@ public class ChessGame extends AbsGame {
         this.gameId = gameId;
         this.isPlaying = Color.WHITE;
         this.moves = new ArrayList<>();
-        this.board = new ChessBoard(new ChessRules(this.isPlaying));
+        this.board = new ChessBoard(new ChessRules(this.isPlaying), this.moves);
     }
 }

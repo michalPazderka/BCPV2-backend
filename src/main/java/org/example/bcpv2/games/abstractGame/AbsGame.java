@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.bcpv2.GameColors.GameColor;
-import org.example.bcpv2.boards.OthelloBoard;
+import org.example.bcpv2.games.chess.Move;
 import org.example.bcpv2.games.chess.eunums.Color;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public abstract class AbsGame {
     protected GameColor white;
     protected GameColor black;
     protected Color isPlaying;
-    protected List<String> moves;
+    protected List<Move> moves;
 
     public void changeColor() {
         this.isPlaying = (this.isPlaying.equals(Color.WHITE)) ? Color.BLACK : Color.WHITE;
@@ -37,6 +37,10 @@ public abstract class AbsGame {
 
     public void setColorBlack() {
         this.black.setTaken(true);
+    }
+
+    public void addMove(Move move) {
+        this.moves.add(move);
     }
 
 }

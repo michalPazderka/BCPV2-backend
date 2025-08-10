@@ -34,6 +34,11 @@ public class ChessController {
         return chessService.joinGame(gameId, color);
     }
 
+    @GetMapping("/colors")
+    public ColorDto getColors() {
+        return chessService.getColors();
+    }
+
     @GetMapping("/{gameId}/restOfColors")
     public ResponseEntity<ColorDto> getRestOfColors(@PathVariable String gameId) {
         return ResponseEntity.ok(chessService.colorDto(gameId));

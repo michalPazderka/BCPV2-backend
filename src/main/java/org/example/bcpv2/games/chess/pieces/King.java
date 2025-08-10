@@ -27,6 +27,14 @@ public class King extends Piece<ChessBoard>{
                 moves.add(new Square(x,y));
             }
         }
+        if (board.castleEightSide(this.getColor(), board.getMoveHistory())) {
+            var rookPosition = this.getColor() == Color.WHITE ? 0 : 7;
+            moves.add(new Square(rookPosition, 6));
+        }
+        if (board.castleOneSide(this.getColor(), board.getMoveHistory())) {
+            var rookPosition = this.getColor() == Color.WHITE ? 0 : 7;
+            moves.add(new Square(rookPosition, 2));
+        }
         return moves;
     }
 

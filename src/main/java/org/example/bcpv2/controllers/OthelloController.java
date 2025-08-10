@@ -29,6 +29,12 @@ public class OthelloController {
         }
         return ResponseEntity.ok(game);
     }
+
+    @GetMapping("/colors")
+    public ColorDto getGameColors(){
+        return othelloService.getColors();
+    }
+
     @PostMapping("/join/{gameId}")
     public OthelloGameDto joinGame(@PathVariable String gameId, @RequestBody String color){
         return othelloService.joinGame(gameId, color);

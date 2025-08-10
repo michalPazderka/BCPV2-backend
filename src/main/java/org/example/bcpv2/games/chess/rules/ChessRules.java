@@ -31,7 +31,7 @@ public class ChessRules {
     }
 
     public boolean isTheoreticalCheck(Color color, ChessBoard tempBoard) {
-        Square king = tempBoard.getKing(color);
+        Square king = tempBoard.getKingSquare(color);
         List<Square> theoreticalMoves = getEveryTheoreticalMove(tempBoard.changeColor(this.isPlaying), tempBoard);
         return theoreticalMoves.stream()
                 .anyMatch(square -> king.getRow() == square.getRow() && king.getCol() == square.getCol());
@@ -94,9 +94,14 @@ public class ChessRules {
     }
 
     public boolean isCheck(ChessBoard board){
-        Square king = board.getKing(this.isPlaying);
+        Square king = board.getKingSquare(this.isPlaying);
         List<Square> possibleMoves = this.getEveryMove(switchColors(this.isPlaying), board);
         return possibleMoves.stream().anyMatch(square -> king.getRow() == square.getRow() && king.getCol() == square.getCol());
+    }
+
+    public boolean isSquareUnderAttack(Square square, ChessBoard board, Color color){
+        var getEveryTheoreticalMove = this.getEveryTheoreticalMove(color, board);
+        return getEveryTheoreticalMove.stream().anyMatch(square1 -> square1.getRow() == square.getRow() && square1.getCol() == square.getCol());
     }
 
     public Color switchColors(Color color){

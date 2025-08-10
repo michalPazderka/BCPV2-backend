@@ -5,7 +5,9 @@ import org.example.bcpv2.boards.Square;
 import org.example.bcpv2.dto.ChessGameDto;
 import org.example.bcpv2.dto.ColorDto;
 import org.example.bcpv2.games.chess.ChessGame;
+import org.example.bcpv2.games.chess.Move;
 import org.example.bcpv2.games.chess.eunums.Color;
+import org.example.bcpv2.games.chess.pieces.King;
 import org.example.bcpv2.games.chess.pieces.Piece;
 import org.example.bcpv2.mapper.ChessGameMapperS;
 import org.example.bcpv2.webSocket.WebSocketService;
@@ -18,13 +20,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @AllArgsConstructor
-public class ChessService implements GameService<ChessGame, ChessGameDto>{
+public class ChessService implements GameService<ChessGame, ChessGameDto> {
     private final Map<String, ChessGame> activeGames = new ConcurrentHashMap<>();
     private final ChessGameMapperS chessGameMapper;
     private final WebSocketService webSocketService;
 
     public List<ChessGameDto> getGames() {
         return activeGames.values().stream().map(chessGameMapper::chessGameToChessGameDto).toList();
+    }
+
+    public ColorDto getColors(){
+        return chessGameMapper.colorToColorDto(List.of(Color.WHITE, Color.BLACK));
     }
 
     public ChessGameDto createGame(String color) {
@@ -68,7 +74,7 @@ public class ChessService implements GameService<ChessGame, ChessGameDto>{
         return null;
     }
 
-    public ChessGame getGame(String gameId){
+    public ChessGame getGame(String gameId) {
         return activeGames.get(gameId);
     }
 
@@ -88,7 +94,14 @@ public class ChessService implements GameService<ChessGame, ChessGameDto>{
             List<Square> squareList = piece.getPossibleMoves(game.getBoard());
             for (Square square : squareList) {
                 if (square.getRow() == Integer.parseInt(moves[2]) && square.getCol() == Integer.parseInt(moves[3])) {
-                    game.getBoard().setPiecePostion(square.getRow(), square.getCol(), piece, game.getBoard());
+                    if (move.length() > 4) {
+                        King king = game.getBoard().getKing(game.getIsPlaying());
+                        game.getBoard().castleMove(king, Integer.parseInt(moves[4]));
+                    } else {
+                        game.getBoard().setPiecePostion(square.getRow(), square.getCol(), piece, game.getBoard());
+                    }
+                    game.addMove(new Move(moves[0] + moves[1], moves[2] + moves[3], piece, game.getBoard().getPiece(Integer.parseInt(moves[2]), Integer.parseInt(moves[3]))));
+                    game.getBoard().checkIfMovePromote(square.getRow(), square.getCol(), piece);
                     game.changeColor();
                     game.getBoard().getChessRules().setIsPlaying((game.getBoard().getChessRules().getIsPlaying().equals(Color.WHITE)) ? Color.BLACK : Color.WHITE);
                     var chessGameDto = chessGameMapper.chessGameToChessGameDto(game);
@@ -117,7 +130,7 @@ public class ChessService implements GameService<ChessGame, ChessGameDto>{
         throw new IllegalArgumentException("Game id does not exist");
     }
 
-    public void killGame(String gameId){
+    public void killGame(String gameId) {
         activeGames.remove(gameId);
     }
 
