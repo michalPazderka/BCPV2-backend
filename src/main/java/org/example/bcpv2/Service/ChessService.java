@@ -29,7 +29,7 @@ public class ChessService implements GameService<ChessGame, ChessGameDto> {
         return activeGames.values().stream().map(chessGameMapper::chessGameToChessGameDto).toList();
     }
 
-    public ColorDto getColors(){
+    public ColorDto getColors() {
         return chessGameMapper.colorToColorDto(List.of(Color.WHITE, Color.BLACK));
     }
 

@@ -1,5 +1,7 @@
 package org.example.bcpv2.games.chess.rules;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.bcpv2.boards.ChessBoard;
 import org.example.bcpv2.boards.Square;
 import org.example.bcpv2.games.chess.eunums.Color;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@Setter
 public class ChessRules {
 
     /*private ChessBoard chessBoard;
@@ -83,7 +87,7 @@ public class ChessRules {
         return moves;
     }
 
-    public boolean isMate(ChessBoard board){
+    public boolean isMate(ChessBoard board) {
         List<Square> possibleMoves = getEveryMove(this.isPlaying, board);
         return possibleMoves.isEmpty() && this.isCheck(board);
     }
@@ -93,18 +97,18 @@ public class ChessRules {
         return possibleMoves.isEmpty() && !this.isCheck(board);
     }
 
-    public boolean isCheck(ChessBoard board){
+    public boolean isCheck(ChessBoard board) {
         Square king = board.getKingSquare(this.isPlaying);
         List<Square> possibleMoves = this.getEveryMove(switchColors(this.isPlaying), board);
         return possibleMoves.stream().anyMatch(square -> king.getRow() == square.getRow() && king.getCol() == square.getCol());
     }
 
-    public boolean isSquareUnderAttack(Square square, ChessBoard board, Color color){
+    public boolean isSquareUnderAttack(Square square, ChessBoard board, Color color) {
         var getEveryTheoreticalMove = this.getEveryTheoreticalMove(color, board);
         return getEveryTheoreticalMove.stream().anyMatch(square1 -> square1.getRow() == square.getRow() && square1.getCol() == square.getCol());
     }
 
-    public Color switchColors(Color color){
+    public Color switchColors(Color color) {
         return color.equals(Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 

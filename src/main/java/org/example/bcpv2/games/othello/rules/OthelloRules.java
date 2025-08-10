@@ -17,8 +17,6 @@ public class OthelloRules {
         var possibleMoves = board.getPossibleMoves(color);
         color = (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
         var possibleMoves2 = board.getPossibleMoves(color);
-        System.out.println("possible moves 1: " + possibleMoves.isEmpty());
-        System.out.println("possible moves 2: " + possibleMoves2.isEmpty());
         return possibleMoves.isEmpty() && possibleMoves2.isEmpty();
     }
 

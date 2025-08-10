@@ -105,7 +105,7 @@ public class ChessBoard extends AbsBoard {
 
     public King getKing(Color color) {
         var piece = getKingSquare(color).getPiece();
-        if(piece.isPresent() && piece.get() instanceof King){
+        if (piece.isPresent() && piece.get() instanceof King) {
             return (King) piece.get();
         }
         return null;
